@@ -290,7 +290,28 @@ cd ..
 
 > Editar `backend/urls.py`
 
+```python
+from django.contrib import admin
+from django.urls import include, path
+
+
+urlpatterns = [
+    path('', include('bookstore.urls', namespace='bookstore')),
+    path('admin/', admin.site.urls),
+]
+```
+
 > Editar `bookstore/urls.py`
+
+```python
+from bookstore.api_drf.viewsets import AuthorViewSet, BookViewSet, PublisherViewSet
+
+app_name = 'bookstore'
+
+urlpatterns = [
+    path('api/v1/bookstore/', include(router.urls)),
+]
+```
 
 > Editar `bookstore/api/viewsets.py`
 
@@ -301,7 +322,35 @@ from bookstore.api_drf.serializers import ...
 
 > Editar `bookstore/serializers.py`
 
+```python
+from rest_framework import serializers
 
+from bookstore.models import Author, Book, Publisher
+
+
+class AuthorSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Author
+        fields = '__all__'
+
+
+class PublisherSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Publisher
+        fields = '__all__'
+
+
+class BookSerializer(serializers.ModelSerializer):
+    authors = AuthorSerializer(many=True)
+    publisher = PublisherSerializer()
+
+    class Meta:
+        model = Book
+        fields = '__all__'
+
+```
 
 ## Django Ninja
 
