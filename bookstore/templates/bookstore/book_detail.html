@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h1>Detalhes do Livro</h1>
+
+<ul>
+  <li><b>Nome:</b> {{ object.name }}</li>
+  <li><b>ISBN:</b> {{ object.isbn }}</li>
+  <li><b>Pontuação:</b> {{ object.rating }}</li>
+  <li><b>Autores:</b> {{ object.authors.all|join:", " }}</li>
+  <li><b>Editora:</b> {{ object.publisher }}</li>
+  <li><b>Preço:</b> {{ object.price }}</li>
+  <li><b>Estoque:</b> {{ object.stock }}</li>
+</ul>
+
+{% endblock content %}

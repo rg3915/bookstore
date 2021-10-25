@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+  <h1>Deletar Autor</h1>
+
+  <div class="cols-6">
+    <form action="." method="POST">
+      <div class="col-sm-6">
+        {% csrf_token %}
+        <p>Deseja deletar {{ object }} ?</p>
+        <div class="form-group">
+          <button type="submit" class="btn btn-primary">Sim</button>
+          <a class="btn btn-danger" href="{% url 'bookstore:author_list' %}">Não</a>
+        </div>
+      </div>
+    </form>
+  </div>
+
+{% endblock content %}

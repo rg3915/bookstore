@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h1>
+  Lista de Autores
+  <a href="{% url 'bookstore:author_create' %}" class="btn btn-primary">
+    <i class="fa fa-plus"></i>
+    Adicionar
+  </a>
+</h1>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th>Nome</th>
+      <th>Ações</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for object in object_list %}
+      <tr>
+        <td>
+          <a href="{{ object.get_absolute_url }}">{{ object.name }}</a>
+        </td>
+        <td>
+          <a href="{% url 'bookstore:author_update' object.pk %}">
+            <i class="fa fa-edit"></i>
+          </a>
+          <a href="{% url 'bookstore:author_delete' object.pk %}" style="padding-left: 7px">
+            <i class="fa fa-close no"></i>
+          </a>
+        </td>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+{% include "includes/pagination.html" %}
+
+{% endblock content %}
