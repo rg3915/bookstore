@@ -634,13 +634,214 @@ touch core/templates/includes/{nav,pagination}.html
 
 mkdir -p bookstore/templates/bookstore
 touch bookstore/templates/bookstore/{book,author,publisher}_{list,detail,form,confirm_delete}.html
+
+touch bookstore/{forms,views}.py
 ```
 
 
 > Editar `bookstore/urls.py`
+
+```python
+from django.urls import include, path
+from rest_framework import routers
+
+from bookstore import views as v
+from bookstore.api_drf.viewsets import (
+    AuthorViewSet,
+    BookViewSet,
+    PublisherViewSet
+)
+
+app_name = 'bookstore'
+
+router = routers.DefaultRouter()
+
+router.register(r'authors', AuthorViewSet)
+router.register(r'publishers', PublisherViewSet)
+router.register(r'books', BookViewSet)
+
+authors_urlpatterns = [
+    path('', v.AuthorListView.as_view(), name='author_list'),
+    path('<int:pk>/', v.AuthorDetailView.as_view(), name='author_detail'),
+    path('create/', v.AuthorCreateView.as_view(), name='author_create'),
+    path('<int:pk>/update/', v.AuthorUpdateView.as_view(), name='author_update'),
+    path('<int:pk>/delete/', v.AuthorDeleteView.as_view(), name='author_delete'),
+]
+
+publishers_urlpatterns = [
+    path('', v.PublisherListView.as_view(), name='publisher_list'),
+    path('<int:pk>/', v.PublisherDetailView.as_view(), name='publisher_detail'),
+    path('create/', v.PublisherCreateView.as_view(), name='publisher_create'),
+    path('<int:pk>/update/', v.PublisherUpdateView.as_view(), name='publisher_update'),
+    path('<int:pk>/delete/', v.PublisherDeleteView.as_view(), name='publisher_delete'),
+]
+
+books_urlpatterns = [
+    path('', v.BookListView.as_view(), name='book_list'),
+    path('<int:pk>/', v.BookDetailView.as_view(), name='book_detail'),
+    path('create/', v.BookCreateView.as_view(), name='book_create'),
+    path('<int:pk>/update/', v.BookUpdateView.as_view(), name='book_update'),
+    path('<int:pk>/delete/', v.BookDeleteView.as_view(), name='book_delete'),
+]
+
+urlpatterns = [
+    path('api/v1/bookstore/', include(router.urls)),
+    path('author/', include(authors_urlpatterns)),
+    path('publisher/', include(publishers_urlpatterns)),
+    path('book/', include(books_urlpatterns)),
+]
+
+```
+
 > Editar `bookstore/views.py`
+
+```python
+from django.urls import reverse_lazy
+from django.views.generic import (
+    CreateView,
+    DeleteView,
+    DetailView,
+    ListView,
+    UpdateView
+)
+
+from .forms import AuthorForm, BookForm, PublisherForm
+from .models import Author, Book, Publisher
+
+
+class AuthorListView(ListView):
+    model = Author
+    paginate_by = 20
+
+
+class AuthorDetailView(DetailView):
+    model = Author
+
+
+class AuthorCreateView(CreateView):
+    model = Author
+    form_class = AuthorForm
+
+
+class AuthorUpdateView(UpdateView):
+    model = Author
+    form_class = AuthorForm
+
+
+class AuthorDeleteView(DeleteView):
+    model = Author
+    success_url = reverse_lazy('bookstore:author_list')
+
+
+class PublisherListView(ListView):
+    model = Publisher
+    paginate_by = 20
+
+
+class PublisherDetailView(DetailView):
+    model = Publisher
+
+
+class PublisherCreateView(CreateView):
+    model = Publisher
+    form_class = PublisherForm
+
+
+class PublisherUpdateView(UpdateView):
+    model = Publisher
+    form_class = PublisherForm
+
+
+class PublisherDeleteView(DeleteView):
+    model = Publisher
+    success_url = reverse_lazy('bookstore:publisher_list')
+
+
+class BookListView(ListView):
+    model = Book
+    paginate_by = 20
+
+
+class BookDetailView(DetailView):
+    model = Book
+
+
+class BookCreateView(CreateView):
+    model = Book
+    form_class = BookForm
+
+
+class BookUpdateView(UpdateView):
+    model = Book
+    form_class = BookForm
+
+
+class BookDeleteView(DeleteView):
+    model = Book
+    success_url = reverse_lazy('bookstore:book_list')
+
+```
+
+
 > Editar `bookstore/forms.py`
+
+```python
+from django import forms
+
+from .models import Author, Book, Publisher
+
+
+class _BaseModelForm(forms.ModelForm):
+    required_css_class = 'required'
+
+    def __init__(self, *args, **kwargs):
+        super(_BaseModelForm, self).__init__(*args, **kwargs)
+        for field_name, field in self.fields.items():
+            field.widget.attrs['class'] = 'form-control'
+
+
+class AuthorForm(_BaseModelForm):
+
+    class Meta:
+        model = Author
+        fields = '__all__'
+
+
+class PublisherForm(_BaseModelForm):
+
+    class Meta:
+        model = Publisher
+        fields = '__all__'
+
+
+class BookForm(_BaseModelForm):
+
+    class Meta:
+        model = Book
+        fields = '__all__'
+```
+
 > Editar `bookstore/models.py`
+
+```python
+class Author(models.Model):
+
+    def get_absolute_url(self):
+        return reverse_lazy('bookstore:author_detail', kwargs={'pk': self.pk})
+
+
+class Publisher(models.Model):
+
+    def get_absolute_url(self):
+        return reverse_lazy('bookstore:publisher_detail', kwargs={'pk': self.pk})
+
+
+class Book(models.Model):
+
+    def get_absolute_url(self):
+        return reverse_lazy('bookstore:book_detail', kwargs={'pk': self.pk})
+
+```
 
 > Editar os templates
 
@@ -648,8 +849,36 @@ touch bookstore/templates/bookstore/{book,author,publisher}_{list,detail,form,co
 
 ---
 
-Vídeos no meu canal
+## Vídeos no meu canal
 
 * [A Essência do Django](https://youtu.be/mlaCLGItR7Q)
 * [Introdução a Arquitetura do Django - Pyjamas 2019](https://youtu.be/XjXpwZhOKOs)
 * [VueJS + Django Ninja](https://youtu.be/cZ7n3HN9MiU)
+* [Regis do Python](https://www.youtube.com/regis-do-python)
+
+
+## Links
+
+* https://www.python.org/
+* https://www.djangoproject.com/
+* http://pythonclub.com.br/
+* https://getbootstrap.com/
+* https://docs.djangoproject.com/en/3.2/ref/models/fields/
+* https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css
+* https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css
+* https://code.jquery.com/jquery-3.4.1.min.js
+* https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js
+* https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js
+* https://getbootstrap.com/docs/4.0/examples/starter-template/
+* https://github.com/JTruax/bootstrap-starter-template/blob/master/template/start.html
+* https://ccbv.co.uk/
+* https://www.youtube.com/watch?v=2qZcPb8ZWQA
+* https://www.youtube.com/regis-do-python
+
+
+## Livros
+
+* [Pense Python 2e](https://penseallen.github.io/PensePython2e/)
+* Aprenda Django 3 com Exemplos
+* Two Scoops of Django
+

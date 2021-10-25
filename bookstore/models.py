@@ -1,4 +1,5 @@
 from django.db import models
+from django.urls import reverse_lazy
 
 
 class Author(models.Model):
@@ -12,6 +13,9 @@ class Author(models.Model):
         verbose_name = 'Autor'
         verbose_name_plural = 'Autores'
 
+    def get_absolute_url(self):
+        return reverse_lazy('bookstore:author_detail', kwargs={'pk': self.pk})
+
 
 class Publisher(models.Model):
     name = models.CharField(max_length=50, unique=True)
@@ -24,6 +28,9 @@ class Publisher(models.Model):
         ordering = ('name',)
         verbose_name = 'Editora'
         verbose_name_plural = 'Editoras'
+
+    def get_absolute_url(self):
+        return reverse_lazy('bookstore:publisher_detail', kwargs={'pk': self.pk})
 
 
 class Book(models.Model):
@@ -43,3 +50,6 @@ class Book(models.Model):
         ordering = ('name',)
         verbose_name = 'Livro'
         verbose_name_plural = 'Livros'
+
+    def get_absolute_url(self):
+        return reverse_lazy('bookstore:book_detail', kwargs={'pk': self.pk})
