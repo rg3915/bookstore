@@ -598,7 +598,30 @@ path('', include('core.urls')),
 ```
 
 > Editar `core/urls.py`
+
+```python
+from django.urls import path
+
+from .views import index
+
+app_name = 'core'
+
+urlpatterns = [
+    path('', index, name='index'),
+]
+```
+
 > Editar `core/views.py`
+
+```python
+from django.shortcuts import render
+
+
+def index(request):
+    template_name = 'index.html'
+    return render(request, template_name)
+
+```
 
 ```
 mkdir -p core/static/css
