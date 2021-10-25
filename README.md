@@ -854,6 +854,7 @@ class Book(models.Model):
 * [A Essência do Django](https://youtu.be/mlaCLGItR7Q)
 * [Introdução a Arquitetura do Django - Pyjamas 2019](https://youtu.be/XjXpwZhOKOs)
 * [VueJS + Django Ninja](https://youtu.be/cZ7n3HN9MiU)
+* [Python-triangulo: Django: FBV vs CBV](https://www.youtube.com/watch?v=2qZcPb8ZWQA)
 * [Regis do Python](https://www.youtube.com/regis-do-python)
 
 
@@ -872,8 +873,6 @@ class Book(models.Model):
 * https://getbootstrap.com/docs/4.0/examples/starter-template/
 * https://github.com/JTruax/bootstrap-starter-template/blob/master/template/start.html
 * https://ccbv.co.uk/
-* https://www.youtube.com/watch?v=2qZcPb8ZWQA
-* https://www.youtube.com/regis-do-python
 
 
 ## Livros
