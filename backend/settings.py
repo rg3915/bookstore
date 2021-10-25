@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django_extensions',
     'django_seed',
     # my apps
+    'bookstore',
 ]
 
 MIDDLEWARE = [
