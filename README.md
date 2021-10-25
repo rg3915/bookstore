@@ -62,22 +62,6 @@ pip freeze | grep 'django-extensions\|python-decouple\|django-seed\|faker' >> re
 
 > Editar `settings.py` e incluir `dr_scaffold` em `INSTALLED_APPS`.
 
-```
-python manage.py dr_scaffold bookstore Author name:charfield
-
-python manage.py dr_scaffold bookstore Publisher name:charfield score:positiveintegerfield
-
-python manage.py dr_scaffold bookstore Book \
-name:charfield \
-isbn:charfield \
-rating:decimalfield \
-authors:manytomany:Author \
-publisher:foreignkey:Publisher \
-price:decimalfield \
-stock:integerfield
-```
-
-
 > Editar `settings.py`
 
 ```python
@@ -100,15 +84,20 @@ DEBUG = config('DEBUG', default=False, cast=bool)
 ALLOWED_HOSTS = config('ALLOWED_HOSTS', default=[], cast=Csv())
 
 INSTALLED_APPS = [
-    ...
+    'django.contrib.admin',
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.messages',
+    'django.contrib.staticfiles',
     # 3rd apps
     'dr_scaffold',
     'rest_framework',
     'django_extensions',
     'django_seed',
     # my apps
-    'bookstore',
 ]
+
 
 LANGUAGE_CODE = 'pt-br'
 
@@ -117,9 +106,30 @@ TIME_ZONE = 'America/Sao_Paulo'
 STATIC_ROOT = BASE_DIR.joinpath('staticfiles')
 ```
 
+#### contrib
+
+https://github.com/rg3915/bookstore/blob/main/contrib/env_gen.py
+
 ```
-# Link contrib
+mkdir contrib
+touch contrib/env_gen.py
 python contrib/env_gen.py
+```
+
+
+```
+python manage.py dr_scaffold bookstore Author name:charfield
+
+python manage.py dr_scaffold bookstore Publisher name:charfield score:positiveintegerfield
+
+python manage.py dr_scaffold bookstore Book \
+name:charfield \
+isbn:charfield \
+rating:decimalfield \
+authors:manytomany:Author \
+publisher:foreignkey:Publisher \
+price:decimalfield \
+stock:integerfield
 ```
 
 
@@ -158,7 +168,8 @@ python manage.py runserver
 
 ```python
 import string
-from random import choice, random, randint
+from random import choice, randint, random
+
 from faker import Faker
 
 faker = Faker('pt-br')
@@ -209,6 +220,7 @@ cd ..
 
 ```python
 from bookstore.api_v1.serializers import ...
+
 ```
 
 > Editar `bookstore/serializers.py`
