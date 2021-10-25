@@ -33,7 +33,7 @@ python manage.py createsuperuser --username="admin" --email=""
 
 # Passo a passo
 
-
+https://github.com/rg3915/bookstore/blob/main/passo-a-passo.md
 
 ---
 
