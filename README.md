@@ -561,6 +561,17 @@ def delete_publisher(request, id: int):
 
 ```
 
+> Editar `backend/urls.py`
+
+```python
+from .api import api
+
+    ...
+    path('api/v2/', api.urls),
+    ...
+
+```
+
 
 ## Templates
 
