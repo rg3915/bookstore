@@ -8,7 +8,18 @@ from .models import Author, Book, Publisher
 
 router = Router()
 
+AuthorSchema = create_schema(Author)
+PublisherSchema = create_schema(Publisher)
 BookSchema = create_schema(Book, depth=1)
+
+
+class AuthorSchemaIn(Schema):
+    name: str
+
+
+class PublisherSchemaIn(Schema):
+    name: str
+    score: int
 
 
 class BookSchemaIn(Schema):
@@ -90,4 +101,72 @@ def update_book(request, id: int, payload: BookSchemaIn):
 def delete_book(request, id: int):
     book = get_object_or_404(Book, id=id)
     book.delete()
+    return 204, None
+
+
+@router.get("/authors", response=List[AuthorSchema])
+def list_authors(request):
+    qs = Author.objects.all()
+    return qs
+
+
+@router.get("/authors/{id}", response=AuthorSchema)
+def get_author(request, id: int):
+    author = get_object_or_404(Author, id=id)
+    return author
+
+
+@router.post("/authors", response={201: AuthorSchema})
+def create_author(request, payload: AuthorSchemaIn):
+    author = Author.objects.create(**payload.dict())
+    return 201, author
+
+
+@router.put("/authors/{id}", response=AuthorSchema)
+def update_author(request, id: int, payload: AuthorSchemaIn):
+    author = get_object_or_404(Author, id=id)
+    for attr, value in payload.dict().items():
+        setattr(author, attr, value)
+    author.save()
+    return author
+
+
+@router.delete("/authors/{id}", response={204: None})
+def delete_author(request, id: int):
+    author = get_object_or_404(Author, id=id)
+    author.delete()
+    return 204, None
+
+
+@router.get("/publishers", response=List[PublisherSchema])
+def list_publishers(request):
+    qs = Publisher.objects.all()
+    return qs
+
+
+@router.get("/publishers/{id}", response=PublisherSchema)
+def get_publisher(request, id: int):
+    publisher = get_object_or_404(Publisher, id=id)
+    return publisher
+
+
+@router.post("/publishers", response={201: PublisherSchema})
+def create_publisher(request, payload: PublisherSchemaIn):
+    publisher = Publisher.objects.create(**payload.dict())
+    return 201, publisher
+
+
+@router.put("/publishers/{id}", response=PublisherSchema)
+def update_publisher(request, id: int, payload: PublisherSchemaIn):
+    publisher = get_object_or_404(Publisher, id=id)
+    for attr, value in payload.dict().items():
+        setattr(publisher, attr, value)
+    publisher.save()
+    return publisher
+
+
+@router.delete("/publishers/{id}", response={204: None})
+def delete_publisher(request, id: int):
+    publisher = get_object_or_404(Publisher, id=id)
+    publisher.delete()
     return 204, None
